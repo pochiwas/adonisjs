@@ -2,12 +2,12 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Todo from 'App/Models/Todo'
 
 export default class TodosController {
-  public async index({ request }: HttpContextContract) {
+  public async index({}: HttpContextContract) {
     const todos = await Todo.query()
     return todos
   }
 
-  public async show({ request, params }: HttpContextContract) {
+  public async show({ params }: HttpContextContract) {
     try {
       const todo = await Todo.find(params.id)
       if (todo) {
@@ -18,7 +18,7 @@ export default class TodosController {
     }
   }
 
-  public async update({ auth, request, params }: HttpContextContract) {
+  public async update({ request, params }: HttpContextContract) {
     const todo = await Todo.find(params.id)
     if (todo) {
       todo.title = request.input('title')
@@ -33,16 +33,16 @@ export default class TodosController {
     return // 401
   }
 
-  public async store({ auth, request, response }: HttpContextContract) {
+  public async store({ auth, request }: HttpContextContract) {
     const user = await auth.authenticate()
     const todo = new Todo()
     todo.title = request.input('title')
     todo.desc = request.input('desc')
-    await todo.save(todo)
+    await todo.save()
     return todo
   }
 
-  public async destroy({ response, auth, request, params }: HttpContextContract) {
+  public async destroy({ response, auth, params }: HttpContextContract) {
     const user = await auth.authenticate()
     const todo = await Todo.query().where('id', params.id).delete()
     console.log(user)
