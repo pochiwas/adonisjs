@@ -8,7 +8,7 @@ export default class AuthController {
       const password = request.input('password')
 
       const token = await auth.use('api').attempt(email, password, {
-        expiresIn: '10 days',
+        expiresIn: '30 min',
       })
       return token.toJSON()
     } catch (e) {}
@@ -29,7 +29,7 @@ export default class AuthController {
       const result = await user.save()
 
       const token = await auth.use('api').login(user, {
-        expiresIn: '10 days',
+        expiresIn: '2 days',
       })
       return { token: token.toJSON(), result: result }
     } catch (e) {
